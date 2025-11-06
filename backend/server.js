@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
@@ -10,7 +11,10 @@ const app = express();
 // Init middleware
 app.use(cors());
 app.use(express.json({ extended: false }));
-app.use('/uploads', express.static('uploads'));
+// Serve local uploads only in development to avoid disk usage on serverless platforms
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/uploads', express.static('uploads'));
+}
 
 app.get('/', (req, res) => res.send('API Running'));
 

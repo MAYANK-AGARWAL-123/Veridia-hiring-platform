@@ -145,7 +145,13 @@ const AdminApplications = () => {
                 <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>{selected.coverLetter || '-'}</Typography>
                 <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
                   {selected.resume && (
-                    <Button variant="outlined" href={`${apiBase}/${String(selected.resume).replace(/^\.\//,'')}`} target="_blank">View Resume</Button>
+                    <Button
+                      variant="outlined"
+                      href={/^https?:\/\//i.test(String(selected.resume)) ? selected.resume : `${apiBase}/${String(selected.resume).replace(/^\.\//,'')}`}
+                      target="_blank"
+                    >
+                      View Resume
+                    </Button>
                   )}
                 </Box>
                 <Box sx={{ mt: 2, display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap' }}>

@@ -3,6 +3,8 @@ const Job = require('../models/Job');
 const sendEmail = require('../utils/sendEmail');
 const { applicationSubmittedTemplate, newApplicationAdminNotificationTemplate } = require('../utils/emailTemplates');
 const Admin = require('../models/Admin');
+const cloudinary = require('../utils/cloudinary');
+const streamifier = require('streamifier');
 
 exports.getAllApplications = async (req, res) => {
   if (req.user.role !== 'admin') {
@@ -50,6 +52,20 @@ exports.applyForJob = async (req, res) => {
       return res.status(400).json({ msg: 'You have already applied to this job' });
     }
 
+    // Upload resume buffer to Cloudinary
+    const uploadToCloudinary = () => new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: 'veridia/resumes', resource_type: 'auto' },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        }
+      );
+      streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
+    });
+
+    const uploaded = await uploadToCloudinary();
+
     const newApplication = new Application({
       name,
       email,
@@ -59,7 +75,7 @@ exports.applyForJob = async (req, res) => {
       branch,
       candidate: req.user.id,
       job: jobId,
-      resume: req.file.path,
+      resume: uploaded.secure_url,
       coverLetter,
     });
 

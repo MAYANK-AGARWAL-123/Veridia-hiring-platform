@@ -81,7 +81,12 @@ const ApplicationDetailPage = () => {
                       </Select>
                     </TableCell>
                     <TableCell>
-                      <Button href={`${apiBase}/${String(app.resume).replace(/^\.\//,'')}`} target="_blank">View Resume</Button>
+                      <Button
+                        href={/^https?:\/\//i.test(String(app.resume)) ? app.resume : `${apiBase}/${String(app.resume).replace(/^\.\//,'')}`}
+                        target="_blank"
+                      >
+                        View Resume
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

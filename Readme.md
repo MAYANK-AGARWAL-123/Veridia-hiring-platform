@@ -86,6 +86,37 @@ To get a local copy up and running, follow these simple steps.
 
 ## Screenshots
 
+## Cloudinary Setup
+
+Add these to your backend environment (local .env and Vercel Project Settings → Environment Variables):
+
+```
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```
+
+Notes:
+- Backend reads env via `process.env` (see `backend/utils/cloudinary.js`).
+- No frontend Cloudinary env needed. Resumes are uploaded server-side and the saved `secure_url` is used on the UI.
+- Multer is configured with memory storage for serverless; files are uploaded to Cloudinary in `applicationController.applyForJob`.
+
+## Deploying to Vercel
+
+1. Push repo to GitHub.
+2. Import the repo in Vercel.
+3. Set Environment Variables in Vercel (Project → Settings → Environment Variables):
+   - `MONGODB_URI`, `JWT_SECRET`, `EMAIL_USER`, `EMAIL_PASS`, `PORT` (optional),
+   - `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`.
+4. Set Build/Output:
+   - Monorepo: set Root Directory to `backend` for the API if deploying backend separately, or use a single server if only API.
+   - Frontend (Vite): Root Directory `frontend` and `VITE_API_URL` should point to your deployed backend `/api` base, e.g. `https://your-api.vercel.app/api`.
+5. Re-deploy.
+
+Local development env files:
+- Backend: create `.env` at repo root used by the server (same variables as above).
+- Frontend: `frontend/.env` with `VITE_API_URL=http://localhost:5000/api` for local.
+
 ### Home Page
 
 ![Home Page](./frontend/src/assets/images/home-page.png)
