@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getJobs } from '../api/jobApi';
 import { Link } from 'react-router-dom';
-import { Container, Typography, Card, CardContent, CardActions, Button, Grid } from '@mui/material';
+import { Container, Typography, Card, CardContent, CardActions, Button, Grid, Box } from '@mui/material';
 import Loader from '../components/Loader';
 
 const HomePage = () => {
